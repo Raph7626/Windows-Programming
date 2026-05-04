@@ -1,0 +1,12 @@
+C:\Users\son dz\source\repos\TH4\QL_BanHang\obj\Debug\QL_BanHang.csproj.AssemblyReference.cache
+C:\Users\son dz\source\repos\TH4\QL_BanHang\obj\Debug\QL_BanHang.csproj.CoreCompileInputs.cache
+C:\Users\son dz\source\repos\TH4\QL_BanHang\bin\Debug\QL_BanHang.exe
+C:\Users\son dz\source\repos\TH4\QL_BanHang\bin\Debug\QL_BanHang.pdb
+C:\Users\son dz\source\repos\TH4\QL_BanHang\obj\Debug\QL_BanHang.exe
+C:\Users\son dz\source\repos\TH4\QL_BanHang\obj\Debug\QL_BanHang.pdb
+D:\Tao Exs\windows\TH4\QL_BanHang\bin\Debug\QL_BanHang.exe
+D:\Tao Exs\windows\TH4\QL_BanHang\bin\Debug\QL_BanHang.pdb
+D:\Tao Exs\windows\TH4\QL_BanHang\obj\Debug\QL_BanHang.csproj.AssemblyReference.cache
+D:\Tao Exs\windows\TH4\QL_BanHang\obj\Debug\QL_BanHang.csproj.CoreCompileInputs.cache
+D:\Tao Exs\windows\TH4\QL_BanHang\obj\Debug\QL_BanHang.exe
+D:\Tao Exs\windows\TH4\QL_BanHang\obj\Debug\QL_BanHang.pdb

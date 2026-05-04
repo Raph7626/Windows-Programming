@@ -1,0 +1,6 @@
+C:\Users\son dz\source\repos\TH4\QL_SinhVien\bin\Debug\QL_SinhVien.exe
+C:\Users\son dz\source\repos\TH4\QL_SinhVien\bin\Debug\QL_SinhVien.pdb
+C:\Users\son dz\source\repos\TH4\QL_SinhVien\obj\Debug\QL_SinhVien.csproj.AssemblyReference.cache
+C:\Users\son dz\source\repos\TH4\QL_SinhVien\obj\Debug\QL_SinhVien.csproj.CoreCompileInputs.cache
+C:\Users\son dz\source\repos\TH4\QL_SinhVien\obj\Debug\QL_SinhVien.exe
+C:\Users\son dz\source\repos\TH4\QL_SinhVien\obj\Debug\QL_SinhVien.pdb

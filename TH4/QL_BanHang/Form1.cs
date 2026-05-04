@@ -1,0 +1,424 @@
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Windows.Forms;
+
+namespace QL_BanHang
+{
+    public partial class Form1 : Form
+    {
+        string chuoiketnoi = "Server=.\\SQLEXPRESS;Database=QL_BanHang;Integrated Security=True;";
+        DataTable dtGioHang = new DataTable();
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            dtGioHang.Columns.Add("MaSP",      typeof(string));
+            dtGioHang.Columns.Add("TenSP",     typeof(string));
+            dtGioHang.Columns.Add("SoLuong",   typeof(int));
+            dtGioHang.Columns.Add("DonGia",    typeof(decimal));
+            dtGioHang.Columns.Add("ThanhTien", typeof(decimal));
+            dgGioHang.DataSource = dtGioHang;
+
+            LoadSanPham();
+            LoadSanPhamLapDon();
+            LoadDonHang();
+        }
+
+        private void LoadSanPham(string keyword = "")
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter(
+                    "SELECT MaSP AS [Mã SP], TenSP AS [Tên SP], DonVi AS [Đơn vị], DonGia AS [Đơn giá], TonKho AS [Tồn kho] FROM SanPham WHERE TenSP LIKE @kw", con);
+                da.SelectCommand.Parameters.AddWithValue("@kw", "%" + keyword + "%");
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dgSanPham.DataSource = dt;
+            }
+        }
+
+        private void dgSanPham_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            tbMaSP.Text   = dgSanPham.Rows[e.RowIndex].Cells[0].Value?.ToString().Trim();
+            tbTenSP.Text  = dgSanPham.Rows[e.RowIndex].Cells[1].Value?.ToString();
+            tbDonVi.Text  = dgSanPham.Rows[e.RowIndex].Cells[2].Value?.ToString();
+            tbDonGia.Text = dgSanPham.Rows[e.RowIndex].Cells[3].Value?.ToString();
+            tbTonKho.Text = dgSanPham.Rows[e.RowIndex].Cells[4].Value?.ToString();
+        }
+
+        private void btThemSP_Click(object sender, EventArgs e)
+        {
+            if (tbMaSP.Text.Trim() == "" || tbTenSP.Text.Trim() == "") { MessageBox.Show("Nhập đầy đủ thông tin!"); return; }
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("INSERT INTO SanPham VALUES(@Ma,@Ten,@DV,@Gia,@Ton)", con);
+                cmd.Parameters.AddWithValue("@Ma",  tbMaSP.Text.Trim());
+                cmd.Parameters.AddWithValue("@Ten", tbTenSP.Text.Trim());
+                cmd.Parameters.AddWithValue("@DV",  tbDonVi.Text.Trim());
+                cmd.Parameters.AddWithValue("@Gia", decimal.Parse(tbDonGia.Text));
+                cmd.Parameters.AddWithValue("@Ton", int.Parse(tbTonKho.Text));
+                cmd.ExecuteNonQuery();
+            }
+            LoadSanPham(); ClearSP();
+        }
+
+        private void btSuaSP_Click(object sender, EventArgs e)
+        {
+            if (tbMaSP.Text.Trim() == "") { MessageBox.Show("Chọn sản phẩm cần sửa!"); return; }
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("UPDATE SanPham SET TenSP=@Ten,DonVi=@DV,DonGia=@Gia,TonKho=@Ton WHERE MaSP=@Ma", con);
+                cmd.Parameters.AddWithValue("@Ma",  tbMaSP.Text.Trim());
+                cmd.Parameters.AddWithValue("@Ten", tbTenSP.Text.Trim());
+                cmd.Parameters.AddWithValue("@DV",  tbDonVi.Text.Trim());
+                cmd.Parameters.AddWithValue("@Gia", decimal.Parse(tbDonGia.Text));
+                cmd.Parameters.AddWithValue("@Ton", int.Parse(tbTonKho.Text));
+                cmd.ExecuteNonQuery();
+            }
+            LoadSanPham(); ClearSP();
+        }
+
+        private void btXoaSP_Click(object sender, EventArgs e)
+        {
+            if (tbMaSP.Text.Trim() == "") { MessageBox.Show("Chọn sản phẩm cần xóa!"); return; }
+            if (MessageBox.Show("Xác nhận xóa?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                using (SqlConnection con = new SqlConnection(chuoiketnoi))
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("DELETE FROM SanPham WHERE MaSP=@Ma", con);
+                    cmd.Parameters.AddWithValue("@Ma", tbMaSP.Text.Trim());
+                    cmd.ExecuteNonQuery();
+                }
+                LoadSanPham(); ClearSP();
+            }
+        }
+
+        private void btNhapHang_Click(object sender, EventArgs e)
+        {
+            if (tbMaSP.Text.Trim() == "") { MessageBox.Show("Chọn sản phẩm cần nhập hàng!"); return; }
+            if (!int.TryParse(tbNhapThem.Text, out int sl) || sl <= 0) { MessageBox.Show("Nhập số lượng hợp lệ!"); return; }
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("UPDATE SanPham SET TonKho=TonKho+@SL WHERE MaSP=@Ma", con);
+                cmd.Parameters.AddWithValue("@SL", sl);
+                cmd.Parameters.AddWithValue("@Ma", tbMaSP.Text.Trim());
+                cmd.ExecuteNonQuery();
+            }
+            LoadSanPham(); tbNhapThem.Clear();
+        }
+
+        private void tbTimKiem_TextChanged(object sender, EventArgs e)
+        {
+            LoadSanPham(tbTimKiem.Text.Trim());
+        }
+
+        private void ClearSP()
+        {
+            tbMaSP.Clear(); tbTenSP.Clear(); tbDonVi.Clear(); tbDonGia.Clear(); tbTonKho.Clear();
+        }
+
+
+        private void LoadSanPhamLapDon()
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter(
+                    "SELECT MaSP AS [Mã SP], TenSP AS [Tên SP], DonGia AS [Đơn giá], TonKho AS [Tồn kho] FROM SanPham WHERE TonKho > 0", con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dgSPLapDon.DataSource = dt;
+            }
+        }
+
+        private void dgSPLapDon_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            tbMaSPDon.Text   = dgSPLapDon.Rows[e.RowIndex].Cells[0].Value?.ToString().Trim();
+            tbTenSPDon.Text  = dgSPLapDon.Rows[e.RowIndex].Cells[1].Value?.ToString();
+            tbDonGiaDon.Text = dgSPLapDon.Rows[e.RowIndex].Cells[2].Value?.ToString();
+        }
+
+        private void btThemVaoGio_Click(object sender, EventArgs e)
+        {
+            if (tbMaSPDon.Text.Trim() == "") { MessageBox.Show("Chọn sản phẩm!"); return; }
+            if (!int.TryParse(tbSoLuong.Text, out int sl) || sl <= 0) { MessageBox.Show("Nhập số lượng hợp lệ!"); return; }
+
+            int tonKho = KiemTraTonKho(tbMaSPDon.Text.Trim());
+            if (sl > tonKho) { MessageBox.Show("Không đủ hàng! Tồn kho: " + tonKho, "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+
+            string maSP = tbMaSPDon.Text.Trim();
+            foreach (DataRow r in dtGioHang.Rows)
+            {
+                if (r["MaSP"].ToString().Trim() == maSP)
+                {
+                    int slMoi = (int)r["SoLuong"] + sl;
+                    if (slMoi > tonKho) { MessageBox.Show("Vượt tồn kho! Tồn kho: " + tonKho, "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+                    r["SoLuong"]   = slMoi;
+                    r["ThanhTien"] = slMoi * (decimal)r["DonGia"];
+                    TinhTong(); return;
+                }
+            }
+            decimal donGia = decimal.Parse(tbDonGiaDon.Text);
+            dtGioHang.Rows.Add(maSP, tbTenSPDon.Text, sl, donGia, sl * donGia);
+            TinhTong();
+        }
+
+        private void btXoaKhoiGio_Click(object sender, EventArgs e)
+        {
+            if (dgGioHang.CurrentRow == null) { MessageBox.Show("Chọn dòng cần xóa!"); return; }
+            dtGioHang.Rows[dgGioHang.CurrentRow.Index].Delete();
+            TinhTong();
+        }
+
+        private void btXacNhan_Click(object sender, EventArgs e)
+        {
+            if (dtGioHang.Rows.Count == 0) { MessageBox.Show("Giỏ hàng trống!"); return; }
+            string maDon = "DH" + DateTime.Now.ToString("yyMMddHHmmss");
+            decimal tong = 0;
+            foreach (DataRow r in dtGioHang.Rows) tong += (decimal)r["ThanhTien"];
+
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlTransaction trans = con.BeginTransaction();
+                try
+                {
+                    SqlCommand cmd1 = new SqlCommand("INSERT INTO DonHang VALUES(@Ma,@Ngay,@Tong,@TT)", con, trans);
+                    cmd1.Parameters.AddWithValue("@Ma",   maDon);
+                    cmd1.Parameters.AddWithValue("@Ngay", DateTime.Now);
+                    cmd1.Parameters.AddWithValue("@Tong", tong);
+                    cmd1.Parameters.AddWithValue("@TT",   "Đã thanh toán");
+                    cmd1.ExecuteNonQuery();
+
+                    foreach (DataRow r in dtGioHang.Rows)
+                    {
+                        SqlCommand cmd2 = new SqlCommand("INSERT INTO ChiTietDon VALUES(@MaDon,@MaSP,@SL,@Gia)", con, trans);
+                        cmd2.Parameters.AddWithValue("@MaDon", maDon);
+                        cmd2.Parameters.AddWithValue("@MaSP",  r["MaSP"].ToString().Trim());
+                        cmd2.Parameters.AddWithValue("@SL",    (int)r["SoLuong"]);
+                        cmd2.Parameters.AddWithValue("@Gia",   (decimal)r["DonGia"]);
+                        cmd2.ExecuteNonQuery();
+
+                        SqlCommand cmd3 = new SqlCommand("UPDATE SanPham SET TonKho=TonKho-@SL WHERE MaSP=@MaSP", con, trans);
+                        cmd3.Parameters.AddWithValue("@SL",   (int)r["SoLuong"]);
+                        cmd3.Parameters.AddWithValue("@MaSP", r["MaSP"].ToString().Trim());
+                        cmd3.ExecuteNonQuery();
+                    }
+                    trans.Commit();
+                    MessageBox.Show("Đặt hàng thành công!\nMã đơn: " + maDon + "\nTổng tiền: " + tong.ToString("#,##0") + " đ", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    dtGioHang.Clear();
+                    lblTong.Text = "0 đ";
+                    LoadSanPhamLapDon();
+                    LoadSanPham();
+                    LoadDonHang();
+                }
+                catch { trans.Rollback(); throw; }
+            }
+        }
+
+        private int KiemTraTonKho(string maSP)
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("SELECT TonKho FROM SanPham WHERE MaSP=@Ma", con);
+                cmd.Parameters.AddWithValue("@Ma", maSP);
+                object val = cmd.ExecuteScalar();
+                return val != null ? (int)val : 0;
+            }
+        }
+
+        private void TinhTong()
+        {
+            decimal tong = 0;
+            foreach (DataRow r in dtGioHang.Rows) tong += (decimal)r["ThanhTien"];
+            lblTong.Text = tong.ToString("#,##0") + " đ";
+        }
+
+
+        private void LoadDonHang()
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                string sql = "SELECT MaDon AS [Mã Đơn], NgayDat AS [Ngày đặt], TongTien AS [Tổng tiền], TrangThai AS [Trạng thái] FROM DonHang WHERE NgayDat BETWEEN @Tu AND @Den";
+                string tt = cbTrangThai.SelectedItem?.ToString() ?? "";
+                if (tt != "" && tt != "-- Tất cả --")
+                    sql += " AND TrangThai = N'" + tt + "'";
+                sql += " ORDER BY NgayDat DESC";
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                da.SelectCommand.Parameters.AddWithValue("@Tu",  dtpTu.Value.Date);
+                da.SelectCommand.Parameters.AddWithValue("@Den", dtpDen.Value.Date.AddDays(1));
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dgDonHang.DataSource = dt;
+            }
+        }
+
+        private void LoadChiTiet(string maDon)
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                string sql = @"SELECT S.TenSP AS [Tên SP], CT.SoLuong AS [SL],
+                               CT.DonGia AS [Đơn giá], CT.SoLuong*CT.DonGia AS [Thành tiền]
+                               FROM ChiTietDon CT JOIN SanPham S ON CT.MaSP=S.MaSP
+                               WHERE CT.MaDon=@Ma";
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                da.SelectCommand.Parameters.AddWithValue("@Ma", maDon);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dgChiTiet.DataSource = dt;
+            }
+        }
+
+        private void dgDonHang_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            tbMaDon.Text     = dgDonHang.Rows[e.RowIndex].Cells[0].Value?.ToString().Trim();
+            tbTrangThai.Text = dgDonHang.Rows[e.RowIndex].Cells[3].Value?.ToString();
+            LoadChiTiet(tbMaDon.Text.Trim());
+        }
+
+        private void btLoc_Click(object sender, EventArgs e)
+        {
+            LoadDonHang();
+        }
+
+        private void btHuyDon_Click(object sender, EventArgs e)
+        {
+            if (tbMaDon.Text.Trim() == "") { MessageBox.Show("Chọn đơn cần hủy!"); return; }
+            if (tbTrangThai.Text == "Đã hủy") { MessageBox.Show("Đơn này đã bị hủy rồi!"); return; }
+            if (MessageBox.Show("Hủy đơn sẽ hoàn lại tồn kho. Xác nhận?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                using (SqlConnection con = new SqlConnection(chuoiketnoi))
+                {
+                    con.Open();
+                    SqlTransaction trans = con.BeginTransaction();
+                    try
+                    {
+                        DataTable dtCT = new DataTable();
+                        SqlCommand cmdDoc = new SqlCommand("SELECT MaSP, SoLuong FROM ChiTietDon WHERE MaDon=@Ma", con, trans);
+                        cmdDoc.Parameters.AddWithValue("@Ma", tbMaDon.Text.Trim());
+                        SqlDataAdapter da = new SqlDataAdapter(cmdDoc);
+                        da.Fill(dtCT);
+                        foreach (DataRow r in dtCT.Rows)
+                        {
+                            SqlCommand cmdKho = new SqlCommand("UPDATE SanPham SET TonKho=TonKho+@SL WHERE MaSP=@MaSP", con, trans);
+                            cmdKho.Parameters.AddWithValue("@SL",   (int)r["SoLuong"]);
+                            cmdKho.Parameters.AddWithValue("@MaSP", r["MaSP"].ToString().Trim());
+                            cmdKho.ExecuteNonQuery();
+                        }
+                        SqlCommand cmdTT = new SqlCommand("UPDATE DonHang SET TrangThai=N'Đã hủy' WHERE MaDon=@Ma", con, trans);
+                        cmdTT.Parameters.AddWithValue("@Ma", tbMaDon.Text.Trim());
+                        cmdTT.ExecuteNonQuery();
+                        trans.Commit();
+                        MessageBox.Show("Hủy đơn thành công, đã hoàn tồn kho!");
+                        LoadDonHang(); dgChiTiet.DataSource = null;
+                        tbMaDon.Clear(); tbTrangThai.Clear();
+                    }
+                    catch { trans.Rollback(); throw; }
+                }
+            }
+        }
+
+        private void btThanhToan_Click(object sender, EventArgs e)
+        {
+            if (tbMaDon.Text.Trim() == "") { MessageBox.Show("Chọn đơn cần cập nhật!"); return; }
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("UPDATE DonHang SET TrangThai=N'Đã thanh toán' WHERE MaDon=@Ma", con);
+                cmd.Parameters.AddWithValue("@Ma", tbMaDon.Text.Trim());
+                cmd.ExecuteNonQuery();
+            }
+            MessageBox.Show("Cập nhật thành công!");
+            LoadDonHang();
+        }
+
+
+        private void btTKMatHang_Click(object sender, EventArgs e)
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                string sql = @"SELECT S.TenSP AS [Tên SP],
+                               SUM(CT.SoLuong) AS [Tổng SL bán],
+                               SUM(CT.SoLuong*CT.DonGia) AS [Doanh thu]
+                               FROM ChiTietDon CT
+                               JOIN SanPham S ON CT.MaSP=S.MaSP
+                               JOIN DonHang D ON CT.MaDon=D.MaDon
+                               WHERE D.NgayDat BETWEEN @Tu AND @Den
+                               AND D.TrangThai <> N'Đã hủy'
+                               GROUP BY S.TenSP
+                               ORDER BY [Doanh thu] DESC";
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                da.SelectCommand.Parameters.AddWithValue("@Tu",  dtpTuTK.Value.Date);
+                da.SelectCommand.Parameters.AddWithValue("@Den", dtpDenTK.Value.Date.AddDays(1));
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dgThongKe.DataSource = dt;
+            }
+        }
+
+        private void btTKNgay_Click(object sender, EventArgs e)
+        {
+            if (cbThang.SelectedIndex < 0 || cbNam.SelectedIndex < 0) return;
+            int thang = cbThang.SelectedIndex + 1;
+            int nam   = int.Parse(cbNam.SelectedItem.ToString());
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                string sql = @"SELECT CAST(NgayDat AS DATE) AS [Ngày],
+                               COUNT(*) AS [Số đơn],
+                               SUM(TongTien) AS [Doanh thu]
+                               FROM DonHang
+                               WHERE MONTH(NgayDat)=@Thang AND YEAR(NgayDat)=@Nam
+                               AND TrangThai <> N'Đã hủy'
+                               GROUP BY CAST(NgayDat AS DATE)
+                               ORDER BY [Ngày]";
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                da.SelectCommand.Parameters.AddWithValue("@Thang", thang);
+                da.SelectCommand.Parameters.AddWithValue("@Nam",   nam);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dgThongKe.DataSource = dt;
+            }
+        }
+
+        private void btTKThang_Click(object sender, EventArgs e)
+        {
+            if (cbNam.SelectedIndex < 0) return;
+            int nam = int.Parse(cbNam.SelectedItem.ToString());
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                string sql = @"SELECT MONTH(NgayDat) AS [Tháng],
+                               COUNT(*) AS [Số đơn],
+                               SUM(TongTien) AS [Doanh thu]
+                               FROM DonHang
+                               WHERE YEAR(NgayDat)=@Nam
+                               AND TrangThai <> N'Đã hủy'
+                               GROUP BY MONTH(NgayDat)
+                               ORDER BY [Tháng]";
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                da.SelectCommand.Parameters.AddWithValue("@Nam", nam);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dgThongKe.DataSource = dt;
+            }
+        }
+    }
+}

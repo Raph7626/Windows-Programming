@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Bai1/Bai1.csproj" Id="fb3baf70-8bea-4f9b-bee8-1efbf00a5658" />
+  <Project Path="QL_BanHang/QL_BanHang.csproj" />
+  <Project Path="QL_Sach/QL_Sach.csproj" />
+  <Project Path="QL_SinhVien/QL_SinhVien.csproj" />
+</Solution>

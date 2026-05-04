@@ -1,0 +1,160 @@
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Windows.Forms;
+
+namespace QL_SinhVien
+{
+    public partial class Form1 : Form
+    {
+        string chuoiketnoi = "Server=.\\SQLEXPRESS;Database=QL_SinhVien;Integrated Security=True;";
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            LoadDanhSach();
+        }
+
+        private void LoadDanhSach()
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                string sql = BuildFilterSQL();
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dgSinhVien.DataSource = dt;
+                if (dgSinhVien.Columns.Count >= 6)
+                {
+                    dgSinhVien.Columns[0].HeaderText = "Mã SV";
+                    dgSinhVien.Columns[1].HeaderText = "Họ SV";
+                    dgSinhVien.Columns[2].HeaderText = "Tên SV";
+                    dgSinhVien.Columns[3].HeaderText = "Ngày sinh";
+                    dgSinhVien.Columns[4].HeaderText = "Giới tính";
+                    dgSinhVien.Columns[5].HeaderText = "Mã Khoa";
+                }
+            }
+        }
+
+        private string BuildFilterSQL()
+        {
+            string sql = "SELECT MaSV, HoSV, TenSV, NgaySinh, GioiTinh, MaKhoa FROM SinhVien WHERE 1=1";
+            string khoa = cbLocKhoa.SelectedItem?.ToString() ?? "";
+            string gt   = cbLocGT.SelectedItem?.ToString() ?? "";
+            if (khoa != "" && khoa != "-- Tất cả --")
+                sql += $" AND MaKhoa = '{khoa}'";
+            if (gt != "" && gt != "-- Tất cả --")
+                sql += $" AND GioiTinh = N'{gt}'";
+            return sql;
+        }
+
+        private void dgSinhVien_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            DataGridViewRow row = dgSinhVien.Rows[e.RowIndex];
+            tbMaSV.Text  = row.Cells[0].Value?.ToString().Trim();
+            tbHoSV.Text  = row.Cells[1].Value?.ToString();
+            tbTenSV.Text = row.Cells[2].Value?.ToString();
+            if (DateTime.TryParse(row.Cells[3].Value?.ToString(), out DateTime ngay))
+                dtpNgaySinh.Value = ngay;
+            string gt = row.Cells[4].Value?.ToString();
+            rbNam.Checked = (gt == "Nam");
+            rbNu.Checked  = (gt == "Nữ");
+            cbMaKhoa.SelectedItem = row.Cells[5].Value?.ToString().Trim();
+        }
+
+        private void btThem_Click(object sender, EventArgs e)
+        {
+            if (!Validate_()) return;
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("INSERT INTO SinhVien VALUES (@Ma,@Ho,@Ten,@NS,@GT,@Khoa)", con);
+                FillParams(cmd);
+                cmd.ExecuteNonQuery();
+            }
+            LoadDanhSach(); ClearForm();
+        }
+
+        private void btSua_Click(object sender, EventArgs e)
+        {
+            if (tbMaSV.Text.Trim() == "") { MessageBox.Show("Chọn sinh viên cần sửa!"); return; }
+            if (!Validate_()) return;
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("UPDATE SinhVien SET HoSV=@Ho,TenSV=@Ten,NgaySinh=@NS,GioiTinh=@GT,MaKhoa=@Khoa WHERE MaSV=@Ma", con);
+                FillParams(cmd);
+                cmd.ExecuteNonQuery();
+            }
+            LoadDanhSach();
+        }
+
+        private void btXoa_Click(object sender, EventArgs e)
+        {
+            if (tbMaSV.Text.Trim() == "") { MessageBox.Show("Chọn sinh viên cần xóa!"); return; }
+            if (MessageBox.Show("Xác nhận xóa?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                using (SqlConnection con = new SqlConnection(chuoiketnoi))
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("DELETE FROM SinhVien WHERE MaSV=@Ma", con);
+                    cmd.Parameters.AddWithValue("@Ma", tbMaSV.Text.Trim());
+                    cmd.ExecuteNonQuery();
+                }
+                LoadDanhSach(); ClearForm();
+            }
+        }
+
+        private void btLoc_Click(object sender, EventArgs e)
+        {
+            LoadDanhSach();
+        }
+
+        private void btThoat_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private bool Validate_()
+        {
+            if (tbMaSV.Text.Trim() == "")  { MessageBox.Show("Nhập Mã SV!"); return false; }
+            if (tbHoSV.Text.Trim() == "")  { MessageBox.Show("Nhập Họ SV!"); return false; }
+            if (tbTenSV.Text.Trim() == "") { MessageBox.Show("Nhập Tên SV!"); return false; }
+            return true;
+        }
+
+        private void FillParams(SqlCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@Ma",   tbMaSV.Text.Trim());
+            cmd.Parameters.AddWithValue("@Ho",   tbHoSV.Text.Trim());
+            cmd.Parameters.AddWithValue("@Ten",  tbTenSV.Text.Trim());
+            cmd.Parameters.AddWithValue("@NS",   dtpNgaySinh.Value.Date);
+            cmd.Parameters.AddWithValue("@GT",   rbNam.Checked ? "Nam" : "Nữ");
+            cmd.Parameters.AddWithValue("@Khoa", cbMaKhoa.SelectedItem?.ToString() ?? "");
+        }
+
+        private void ClearForm()
+        {
+            tbMaSV.Clear(); tbHoSV.Clear(); tbTenSV.Clear();
+            dtpNgaySinh.Value = DateTime.Today;
+            rbNam.Checked = true;
+            cbMaKhoa.SelectedIndex = 0;
+        }
+
+        private void dgSinhVien_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dtpNgaySinh_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+}

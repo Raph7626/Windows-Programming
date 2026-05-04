@@ -1,0 +1,6 @@
+C:\Users\son dz\source\repos\TH4\QL_Sach\bin\Debug\QL_Sach.exe
+C:\Users\son dz\source\repos\TH4\QL_Sach\bin\Debug\QL_Sach.pdb
+C:\Users\son dz\source\repos\TH4\QL_Sach\obj\Debug\QL_Sach.csproj.AssemblyReference.cache
+C:\Users\son dz\source\repos\TH4\QL_Sach\obj\Debug\QL_Sach.csproj.CoreCompileInputs.cache
+C:\Users\son dz\source\repos\TH4\QL_Sach\obj\Debug\QL_Sach.exe
+C:\Users\son dz\source\repos\TH4\QL_Sach\obj\Debug\QL_Sach.pdb
