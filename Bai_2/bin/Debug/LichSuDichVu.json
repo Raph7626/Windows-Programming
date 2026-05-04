@@ -1,0 +1,22 @@
+[
+  {
+    "MaGiaoDich": "75f644db-2bca-4746-8246-adec1cc3bb33",
+    "SoDienThoaiKH": "0347344571",
+    "NgayThucHien": "2026-03-22T00:00:00+07:00",
+    "TenDichVu": "Nh\u1ED5 r\u0103ng kh\u00F4n",
+    "DonGia": 500000,
+    "SoLuong": 2,
+    "ThanhTien": 1000000,
+    "NgayHenTaiKham": "2026-03-28T00:00:00"
+  },
+  {
+    "MaGiaoDich": "49dcf827-238f-425c-beff-a02340214830",
+    "SoDienThoaiKH": "0123456789",
+    "NgayThucHien": "2026-01-30T00:00:00",
+    "TenDichVu": "Nh\u1ED5 r\u0103ng kh\u00F4n",
+    "DonGia": 500000,
+    "SoLuong": 2,
+    "ThanhTien": 1000000,
+    "NgayHenTaiKham": "2026-02-08T00:00:00"
+  }
+]

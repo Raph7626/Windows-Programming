@@ -1,0 +1,20 @@
+[
+  {
+    "MaSach": "004",
+    "TenSach": "Mắt Biếc",
+    "Loai": "Văn học",
+    "TacGia": "Nguyễn Nhật Ánh",
+    "NXB": "Kim Đồng",
+    "SoLuong": 1,
+    "DonGia": 90000.0
+  },
+  {
+    "MaSach": "001",
+    "TenSach": "Giáo trình toán cao cấp",
+    "Loai": "Toán",
+    "TacGia": "ABC",
+    "NXB": "Bách Khoa Hà Nội",
+    "SoLuong": 2,
+    "DonGia": 150000.0
+  }
+]

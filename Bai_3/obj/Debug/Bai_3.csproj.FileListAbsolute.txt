@@ -1,0 +1,13 @@
+D:\TH5\Bai_3\bin\Debug\Bai_3.exe.config
+D:\TH5\Bai_3\bin\Debug\Bai_3.exe
+D:\TH5\Bai_3\bin\Debug\Bai_3.pdb
+D:\TH5\Bai_3\bin\Debug\Newtonsoft.Json.dll
+D:\TH5\Bai_3\bin\Debug\Newtonsoft.Json.xml
+D:\TH5\Bai_3\obj\Debug\Bai_3.csproj.AssemblyReference.cache
+D:\TH5\Bai_3\obj\Debug\Bai_3.Form1.resources
+D:\TH5\Bai_3\obj\Debug\Bai_3.Properties.Resources.resources
+D:\TH5\Bai_3\obj\Debug\Bai_3.csproj.GenerateResource.cache
+D:\TH5\Bai_3\obj\Debug\Bai_3.csproj.CoreCompileInputs.cache
+D:\TH5\Bai_3\obj\Debug\Bai_3.csproj.Up2Date
+D:\TH5\Bai_3\obj\Debug\Bai_3.exe
+D:\TH5\Bai_3\obj\Debug\Bai_3.pdb

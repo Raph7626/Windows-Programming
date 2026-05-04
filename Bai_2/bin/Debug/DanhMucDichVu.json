@@ -1,0 +1,22 @@
+[
+  {
+    "MaDichVu": "DV01",
+    "TenDichVu": "Kh\u00E1m t\u1ED5ng qu\u00E1t",
+    "DonGia": 50000
+  },
+  {
+    "MaDichVu": "DV02",
+    "TenDichVu": "Tr\u00E1m r\u0103ng th\u1EA9m m\u1EF9",
+    "DonGia": 200000
+  },
+  {
+    "MaDichVu": "DV03",
+    "TenDichVu": "Nh\u1ED5 r\u0103ng kh\u00F4n",
+    "DonGia": 500000
+  },
+  {
+    "MaDichVu": "DV04",
+    "TenDichVu": "L\u1EA5y cao r\u0103ng",
+    "DonGia": 150000
+  }
+]
