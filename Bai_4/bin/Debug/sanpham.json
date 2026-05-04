@@ -1,0 +1,16 @@
+[
+  {
+    "MaSP": "SP01",
+    "TenSP": "Trà xanh không độ",
+    "DonVi": "Chai",
+    "DonGia": 10000.0,
+    "TonKho": 193
+  },
+  {
+    "MaSP": "SP02",
+    "TenSP": "caffe",
+    "DonVi": "Ly",
+    "DonGia": 20000.0,
+    "TonKho": 8
+  }
+]

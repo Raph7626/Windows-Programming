@@ -1,0 +1,9 @@
+D:\OnThiWin\De1\bin\Debug\De1.exe
+D:\OnThiWin\De1\bin\Debug\De1.pdb
+D:\OnThiWin\De1\obj\Debug\De1.csproj.AssemblyReference.cache
+D:\OnThiWin\De1\obj\Debug\De1.Form1.resources
+D:\OnThiWin\De1\obj\Debug\De1.Properties.Resources.resources
+D:\OnThiWin\De1\obj\Debug\De1.csproj.GenerateResource.cache
+D:\OnThiWin\De1\obj\Debug\De1.csproj.CoreCompileInputs.cache
+D:\OnThiWin\De1\obj\Debug\De1.exe
+D:\OnThiWin\De1\obj\Debug\De1.pdb

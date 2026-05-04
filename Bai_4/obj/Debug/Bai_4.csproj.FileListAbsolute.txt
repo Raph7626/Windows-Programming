@@ -1,0 +1,17 @@
+D:\TH5\Bai_4\bin\Debug\Bai_4.exe.config
+D:\TH5\Bai_4\bin\Debug\Bai_4.exe
+D:\TH5\Bai_4\bin\Debug\Bai_4.pdb
+D:\TH5\Bai_4\bin\Debug\Newtonsoft.Json.dll
+D:\TH5\Bai_4\bin\Debug\Newtonsoft.Json.xml
+D:\TH5\Bai_4\obj\Debug\Bai_4.csproj.AssemblyReference.cache
+D:\TH5\Bai_4\obj\Debug\Bai_4.Form1.resources
+D:\TH5\Bai_4\obj\Debug\Bai_4.frmLapDonHang.resources
+D:\TH5\Bai_4\obj\Debug\Bai_4.frmQuanLySanPham.resources
+D:\TH5\Bai_4\obj\Debug\Bai_4.frmThongKe.resources
+D:\TH5\Bai_4\obj\Debug\Bai_4.Properties.Resources.resources
+D:\TH5\Bai_4\obj\Debug\Bai_4.csproj.GenerateResource.cache
+D:\TH5\Bai_4\obj\Debug\Bai_4.csproj.CoreCompileInputs.cache
+D:\TH5\Bai_4\obj\Debug\Bai_4.csproj.Up2Date
+D:\TH5\Bai_4\obj\Debug\Bai_4.exe
+D:\TH5\Bai_4\obj\Debug\Bai_4.pdb
+D:\TH5\Bai_4\obj\Debug\Bai_4.frmCapNhatDonHang.resources

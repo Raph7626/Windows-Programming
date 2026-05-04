@@ -1,0 +1,529 @@
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Windows.Forms;
+
+namespace QL_Sach
+{
+    public partial class Form1 : Form
+    {
+        string chuoiketnoi = "Server=.\\SQLEXPRESS;Database=QL_Sach;Integrated Security=True;";
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            LoadLoaiSach();
+            LoadNXB();
+            LoadTacgia();
+            LoadCbLoai();
+            LoadCbTacGia();
+            LoadCbNXB();
+            LoadSach();
+            LoadCbSachHD();
+            LoadHoaDon();
+            LoadThongKe();
+        }
+
+        // ===================== LOẠI SÁCH =====================
+
+        private void LoadLoaiSach()
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter("SELECT MaLoai AS [Mã Loại], TenLoai AS [Tên Loại] FROM LoaiSach", con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dgLoaiSach.DataSource = dt;
+            }
+        }
+
+        private void btThemLoai_Click(object sender, EventArgs e)
+        {
+            if (tbMaLoai.Text.Trim() == "" || tbTenLoai.Text.Trim() == "") { MessageBox.Show("Nhập đầy đủ thông tin!"); return; }
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("INSERT INTO LoaiSach VALUES(@Ma,@Ten)", con);
+                cmd.Parameters.AddWithValue("@Ma", tbMaLoai.Text.Trim());
+                cmd.Parameters.AddWithValue("@Ten", tbTenLoai.Text.Trim());
+                cmd.ExecuteNonQuery();
+            }
+            LoadLoaiSach(); tbMaLoai.Clear(); tbTenLoai.Clear();
+        }
+
+        private void btSuaLoai_Click(object sender, EventArgs e)
+        {
+            if (tbMaLoai.Text.Trim() == "") { MessageBox.Show("Chọn loại sách cần sửa!"); return; }
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("UPDATE LoaiSach SET TenLoai=@Ten WHERE MaLoai=@Ma", con);
+                cmd.Parameters.AddWithValue("@Ma", tbMaLoai.Text.Trim());
+                cmd.Parameters.AddWithValue("@Ten", tbTenLoai.Text.Trim());
+                cmd.ExecuteNonQuery();
+            }
+            LoadLoaiSach(); tbMaLoai.Clear(); tbTenLoai.Clear();
+        }
+
+        private void btXoaLoai_Click(object sender, EventArgs e)
+        {
+            if (tbMaLoai.Text.Trim() == "") { MessageBox.Show("Chọn loại sách cần xóa!"); return; }
+            if (MessageBox.Show("Xác nhận xóa?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                using (SqlConnection con = new SqlConnection(chuoiketnoi))
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("DELETE FROM LoaiSach WHERE MaLoai=@Ma", con);
+                    cmd.Parameters.AddWithValue("@Ma", tbMaLoai.Text.Trim());
+                    cmd.ExecuteNonQuery();
+                }
+                LoadLoaiSach(); tbMaLoai.Clear(); tbTenLoai.Clear();
+            }
+        }
+
+        private void dgLoaiSach_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            tbMaLoai.Text  = dgLoaiSach.Rows[e.RowIndex].Cells[0].Value.ToString().Trim();
+            tbTenLoai.Text = dgLoaiSach.Rows[e.RowIndex].Cells[1].Value.ToString();
+        }
+
+        // ===================== NHÀ XUẤT BẢN =====================
+
+        private void LoadNXB()
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter("SELECT MaNXB AS [Mã NXB], TenNXB AS [Tên NXB] FROM NXB", con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dgNXB.DataSource = dt;
+            }
+        }
+
+        private void btThemNXB_Click(object sender, EventArgs e)
+        {
+            if (tbMaNXB.Text.Trim() == "" || tbTenNXB.Text.Trim() == "") { MessageBox.Show("Nhập đầy đủ thông tin!"); return; }
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("INSERT INTO NXB VALUES(@Ma,@Ten)", con);
+                cmd.Parameters.AddWithValue("@Ma", tbMaNXB.Text.Trim());
+                cmd.Parameters.AddWithValue("@Ten", tbTenNXB.Text.Trim());
+                cmd.ExecuteNonQuery();
+            }
+            LoadNXB(); tbMaNXB.Clear(); tbTenNXB.Clear();
+        }
+
+        private void btSuaNXB_Click(object sender, EventArgs e)
+        {
+            if (tbMaNXB.Text.Trim() == "") { MessageBox.Show("Chọn NXB cần sửa!"); return; }
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("UPDATE NXB SET TenNXB=@Ten WHERE MaNXB=@Ma", con);
+                cmd.Parameters.AddWithValue("@Ma", tbMaNXB.Text.Trim());
+                cmd.Parameters.AddWithValue("@Ten", tbTenNXB.Text.Trim());
+                cmd.ExecuteNonQuery();
+            }
+            LoadNXB(); tbMaNXB.Clear(); tbTenNXB.Clear();
+        }
+
+        private void btXoaNXB_Click(object sender, EventArgs e)
+        {
+            if (tbMaNXB.Text.Trim() == "") { MessageBox.Show("Chọn NXB cần xóa!"); return; }
+            if (MessageBox.Show("Xác nhận xóa?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                using (SqlConnection con = new SqlConnection(chuoiketnoi))
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("DELETE FROM NXB WHERE MaNXB=@Ma", con);
+                    cmd.Parameters.AddWithValue("@Ma", tbMaNXB.Text.Trim());
+                    cmd.ExecuteNonQuery();
+                }
+                LoadNXB(); tbMaNXB.Clear(); tbTenNXB.Clear();
+            }
+        }
+
+        private void dgNXB_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            tbMaNXB.Text  = dgNXB.Rows[e.RowIndex].Cells[0].Value.ToString().Trim();
+            tbTenNXB.Text = dgNXB.Rows[e.RowIndex].Cells[1].Value.ToString();
+        }
+
+        // ===================== TÁC GIẢ =====================
+
+        private void LoadTacgia()
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter("SELECT MaTG AS [Mã TG], TenTG AS [Tên Tác Giả] FROM Tacgia", con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dgTacgia.DataSource = dt;
+            }
+        }
+
+        private void btThemTG_Click(object sender, EventArgs e)
+        {
+            if (tbMaTG.Text.Trim() == "" || tbTenTG.Text.Trim() == "") { MessageBox.Show("Nhập đầy đủ thông tin!"); return; }
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("INSERT INTO Tacgia VALUES(@Ma,@Ten)", con);
+                cmd.Parameters.AddWithValue("@Ma", tbMaTG.Text.Trim());
+                cmd.Parameters.AddWithValue("@Ten", tbTenTG.Text.Trim());
+                cmd.ExecuteNonQuery();
+            }
+            LoadTacgia(); tbMaTG.Clear(); tbTenTG.Clear();
+        }
+
+        private void btSuaTG_Click(object sender, EventArgs e)
+        {
+            if (tbMaTG.Text.Trim() == "") { MessageBox.Show("Chọn tác giả cần sửa!"); return; }
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("UPDATE Tacgia SET TenTG=@Ten WHERE MaTG=@Ma", con);
+                cmd.Parameters.AddWithValue("@Ma", tbMaTG.Text.Trim());
+                cmd.Parameters.AddWithValue("@Ten", tbTenTG.Text.Trim());
+                cmd.ExecuteNonQuery();
+            }
+            LoadTacgia(); tbMaTG.Clear(); tbTenTG.Clear();
+        }
+
+        private void btXoaTG_Click(object sender, EventArgs e)
+        {
+            if (tbMaTG.Text.Trim() == "") { MessageBox.Show("Chọn tác giả cần xóa!"); return; }
+            if (MessageBox.Show("Xác nhận xóa?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                using (SqlConnection con = new SqlConnection(chuoiketnoi))
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("DELETE FROM Tacgia WHERE MaTG=@Ma", con);
+                    cmd.Parameters.AddWithValue("@Ma", tbMaTG.Text.Trim());
+                    cmd.ExecuteNonQuery();
+                }
+                LoadTacgia(); tbMaTG.Clear(); tbTenTG.Clear();
+            }
+        }
+
+        private void dgTacgia_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            tbMaTG.Text  = dgTacgia.Rows[e.RowIndex].Cells[0].Value.ToString().Trim();
+            tbTenTG.Text = dgTacgia.Rows[e.RowIndex].Cells[1].Value.ToString();
+        }
+
+        // ===================== SÁCH =====================
+
+        private void LoadCbLoai()
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter("SELECT MaLoai, TenLoai FROM LoaiSach", con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                cbLoai.DataSource = dt;
+                cbLoai.DisplayMember = "TenLoai";
+                cbLoai.ValueMember = "MaLoai";
+            }
+        }
+
+        private void LoadCbTacGia()
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter("SELECT MaTG, TenTG FROM Tacgia", con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                cbTacGia.DataSource = dt;
+                cbTacGia.DisplayMember = "TenTG";
+                cbTacGia.ValueMember = "MaTG";
+            }
+        }
+
+        private void LoadCbNXB()
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter("SELECT MaNXB, TenNXB FROM NXB", con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                cbNXB.DataSource = dt;
+                cbNXB.DisplayMember = "TenNXB";
+                cbNXB.ValueMember = "MaNXB";
+            }
+        }
+
+        private void LoadSach()
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                string sql = @"SELECT S.MaSach AS [Mã Sách], S.TenSach AS [Tên Sách],
+                               L.TenLoai AS [Loại], TG.TenTG AS [Tác Giả],
+                               N.TenNXB AS [NXB], S.Dongia AS [Đơn Giá], S.Soluong AS [Số Lượng]
+                               FROM Sach S
+                               JOIN LoaiSach L ON S.MaLoai=L.MaLoai
+                               JOIN Tacgia TG ON S.MaTG=TG.MaTG
+                               JOIN NXB N ON S.MaNXB=N.MaNXB";
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dgSach.DataSource = dt;
+            }
+        }
+
+        private void btThemSach_Click(object sender, EventArgs e)
+        {
+            if (tbMaSach.Text.Trim() == "" || tbTenSach.Text.Trim() == "") { MessageBox.Show("Nhập đầy đủ thông tin!"); return; }
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("INSERT INTO Sach VALUES(@Ma,@MaLoai,@Ten,@MaTG,@MaNXB,@Gia,@SL)", con);
+                cmd.Parameters.AddWithValue("@Ma",     tbMaSach.Text.Trim());
+                cmd.Parameters.AddWithValue("@MaLoai", cbLoai.SelectedValue.ToString());
+                cmd.Parameters.AddWithValue("@Ten",    tbTenSach.Text.Trim());
+                cmd.Parameters.AddWithValue("@MaTG",   cbTacGia.SelectedValue.ToString());
+                cmd.Parameters.AddWithValue("@MaNXB",  cbNXB.SelectedValue.ToString());
+                cmd.Parameters.AddWithValue("@Gia",    int.Parse(tbDonGia.Text));
+                cmd.Parameters.AddWithValue("@SL",     int.Parse(tbSoLuong.Text));
+                cmd.ExecuteNonQuery();
+            }
+            LoadSach(); ClearSach();
+        }
+
+        private void btSuaSach_Click(object sender, EventArgs e)
+        {
+            if (tbMaSach.Text.Trim() == "") { MessageBox.Show("Chọn sách cần sửa!"); return; }
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("UPDATE Sach SET MaLoai=@MaLoai,TenSach=@Ten,MaTG=@MaTG,MaNXB=@MaNXB,Dongia=@Gia,Soluong=@SL WHERE MaSach=@Ma", con);
+                cmd.Parameters.AddWithValue("@Ma",     tbMaSach.Text.Trim());
+                cmd.Parameters.AddWithValue("@MaLoai", cbLoai.SelectedValue.ToString());
+                cmd.Parameters.AddWithValue("@Ten",    tbTenSach.Text.Trim());
+                cmd.Parameters.AddWithValue("@MaTG",   cbTacGia.SelectedValue.ToString());
+                cmd.Parameters.AddWithValue("@MaNXB",  cbNXB.SelectedValue.ToString());
+                cmd.Parameters.AddWithValue("@Gia",    int.Parse(tbDonGia.Text));
+                cmd.Parameters.AddWithValue("@SL",     int.Parse(tbSoLuong.Text));
+                cmd.ExecuteNonQuery();
+            }
+            LoadSach(); ClearSach();
+        }
+
+        private void btXoaSach_Click(object sender, EventArgs e)
+        {
+            if (tbMaSach.Text.Trim() == "") { MessageBox.Show("Chọn sách cần xóa!"); return; }
+            if (MessageBox.Show("Xác nhận xóa?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                using (SqlConnection con = new SqlConnection(chuoiketnoi))
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("DELETE FROM Sach WHERE MaSach=@Ma", con);
+                    cmd.Parameters.AddWithValue("@Ma", tbMaSach.Text.Trim());
+                    cmd.ExecuteNonQuery();
+                }
+                LoadSach(); ClearSach();
+            }
+        }
+
+        private void dgSach_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            tbMaSach.Text  = dgSach.Rows[e.RowIndex].Cells[0].Value.ToString().Trim();
+            tbTenSach.Text = dgSach.Rows[e.RowIndex].Cells[1].Value.ToString();
+            tbDonGia.Text  = dgSach.Rows[e.RowIndex].Cells[5].Value.ToString();
+            tbSoLuong.Text = dgSach.Rows[e.RowIndex].Cells[6].Value.ToString();
+            string tenLoai = dgSach.Rows[e.RowIndex].Cells[2].Value.ToString();
+            string tenTG   = dgSach.Rows[e.RowIndex].Cells[3].Value.ToString();
+            string tenNXB  = dgSach.Rows[e.RowIndex].Cells[4].Value.ToString();
+            for (int i = 0; i < cbLoai.Items.Count; i++)
+                if (((DataRowView)cbLoai.Items[i])["TenLoai"].ToString() == tenLoai) { cbLoai.SelectedIndex = i; break; }
+            for (int i = 0; i < cbTacGia.Items.Count; i++)
+                if (((DataRowView)cbTacGia.Items[i])["TenTG"].ToString() == tenTG) { cbTacGia.SelectedIndex = i; break; }
+            for (int i = 0; i < cbNXB.Items.Count; i++)
+                if (((DataRowView)cbNXB.Items[i])["TenNXB"].ToString() == tenNXB) { cbNXB.SelectedIndex = i; break; }
+        }
+
+        private void ClearSach()
+        {
+            tbMaSach.Clear(); tbTenSach.Clear(); tbDonGia.Clear(); tbSoLuong.Clear();
+        }
+
+        // ===================== BÁN HÀNG =====================
+
+        private void LoadCbSachHD()
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter("SELECT MaSach, TenSach, Dongia FROM Sach", con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                cbSachHD.DataSource = dt;
+                cbSachHD.DisplayMember = "TenSach";
+                cbSachHD.ValueMember = "MaSach";
+            }
+        }
+
+        private void LoadHoaDon()
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter("SELECT MaHD AS [Mã HD], TenKhach AS [Tên Khách], SDT AS [SĐT], Tongtien AS [Tổng Tiền] FROM HD", con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dgHoaDon.DataSource = dt;
+            }
+        }
+
+        private void LoadChiTietHD(string maHD)
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                string sql = @"SELECT S.TenSach AS [Tên Sách], CT.Soluong AS [Số Lượng],
+                               CT.Giaban AS [Giá Bán], CT.Soluong*CT.Giaban AS [Thành Tiền]
+                               FROM ChitietHD CT JOIN Sach S ON CT.MaSach=S.MaSach
+                               WHERE CT.MaHD=@MaHD";
+                SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                da.SelectCommand.Parameters.AddWithValue("@MaHD", maHD);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dgChiTiet.DataSource = dt;
+            }
+        }
+
+        private void btThemHD_Click(object sender, EventArgs e)
+        {
+            if (tbMaHD.Text.Trim() == "" || tbTenKhach.Text.Trim() == "") { MessageBox.Show("Nhập đầy đủ thông tin!"); return; }
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("INSERT INTO HD VALUES(@Ma,@Ten,@SDT,0)", con);
+                cmd.Parameters.AddWithValue("@Ma",  tbMaHD.Text.Trim());
+                cmd.Parameters.AddWithValue("@Ten", tbTenKhach.Text.Trim());
+                cmd.Parameters.AddWithValue("@SDT", tbSDT.Text.Trim());
+                cmd.ExecuteNonQuery();
+            }
+            LoadHoaDon();
+        }
+
+        private void btXoaHD_Click(object sender, EventArgs e)
+        {
+            if (tbMaHD.Text.Trim() == "") { MessageBox.Show("Chọn hóa đơn cần xóa!"); return; }
+            if (MessageBox.Show("Xóa hóa đơn và toàn bộ chi tiết?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                using (SqlConnection con = new SqlConnection(chuoiketnoi))
+                {
+                    con.Open();
+                    SqlCommand cmd1 = new SqlCommand("DELETE FROM ChitietHD WHERE MaHD=@Ma", con);
+                    cmd1.Parameters.AddWithValue("@Ma", tbMaHD.Text.Trim());
+                    cmd1.ExecuteNonQuery();
+                    SqlCommand cmd2 = new SqlCommand("DELETE FROM HD WHERE MaHD=@Ma", con);
+                    cmd2.Parameters.AddWithValue("@Ma", tbMaHD.Text.Trim());
+                    cmd2.ExecuteNonQuery();
+                }
+                LoadHoaDon(); dgChiTiet.DataSource = null;
+                tbMaHD.Clear(); tbTenKhach.Clear(); tbSDT.Clear();
+            }
+        }
+
+        private void btThemCT_Click(object sender, EventArgs e)
+        {
+            if (tbMaHD.Text.Trim() == "" || cbSachHD.SelectedValue == null) { MessageBox.Show("Chọn hóa đơn và sách!"); return; }
+            string maSach = cbSachHD.SelectedValue.ToString();
+            int sl        = int.Parse(tbSLBan.Text);
+            int gia       = int.Parse(tbGiaBan.Text);
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("INSERT INTO ChitietHD VALUES(@MaHD,@MaSach,@SL,@Gia)", con);
+                cmd.Parameters.AddWithValue("@MaHD",  tbMaHD.Text.Trim());
+                cmd.Parameters.AddWithValue("@MaSach", maSach);
+                cmd.Parameters.AddWithValue("@SL",    sl);
+                cmd.Parameters.AddWithValue("@Gia",   gia);
+                cmd.ExecuteNonQuery();
+                SqlCommand cmd2 = new SqlCommand("UPDATE HD SET Tongtien=(SELECT SUM(Soluong*Giaban) FROM ChitietHD WHERE MaHD=@MaHD) WHERE MaHD=@MaHD", con);
+                cmd2.Parameters.AddWithValue("@MaHD", tbMaHD.Text.Trim());
+                cmd2.ExecuteNonQuery();
+            }
+            LoadChiTietHD(tbMaHD.Text.Trim());
+            LoadHoaDon(); tbSLBan.Clear(); tbGiaBan.Clear();
+        }
+
+        private void dgHoaDon_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            tbMaHD.Text     = dgHoaDon.Rows[e.RowIndex].Cells[0].Value.ToString().Trim();
+            tbTenKhach.Text = dgHoaDon.Rows[e.RowIndex].Cells[1].Value.ToString();
+            tbSDT.Text      = dgHoaDon.Rows[e.RowIndex].Cells[2].Value.ToString();
+            LoadChiTietHD(tbMaHD.Text.Trim());
+        }
+
+        private void cbSachHD_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbSachHD.SelectedItem != null)
+                tbGiaBan.Text = ((DataRowView)cbSachHD.SelectedItem)["Dongia"].ToString();
+        }
+
+        // ===================== THỐNG KÊ =====================
+
+        private void LoadThongKe()
+        {
+            using (SqlConnection con = new SqlConnection(chuoiketnoi))
+            {
+                con.Open();
+
+                SqlDataAdapter da1 = new SqlDataAdapter(@"SELECT L.TenLoai AS [Loại Sách],
+                    ISNULL(SUM(CT.Soluong),0) AS [Số Lượng Bán],
+                    ISNULL(SUM(CT.Soluong*CT.Giaban),0) AS [Doanh Thu]
+                    FROM LoaiSach L LEFT JOIN Sach S ON L.MaLoai=S.MaLoai
+                    LEFT JOIN ChitietHD CT ON S.MaSach=CT.MaSach
+                    GROUP BY L.TenLoai ORDER BY [Doanh Thu] DESC", con);
+                DataTable dt1 = new DataTable();
+                da1.Fill(dt1);
+                dgTKLoai.DataSource = dt1;
+
+                SqlDataAdapter da2 = new SqlDataAdapter(@"SELECT TG.TenTG AS [Tác Giả],
+                    ISNULL(SUM(CT.Soluong),0) AS [Số Lượng Bán],
+                    ISNULL(SUM(CT.Soluong*CT.Giaban),0) AS [Doanh Thu]
+                    FROM Tacgia TG LEFT JOIN Sach S ON TG.MaTG=S.MaTG
+                    LEFT JOIN ChitietHD CT ON S.MaSach=CT.MaSach
+                    GROUP BY TG.TenTG ORDER BY [Doanh Thu] DESC", con);
+                DataTable dt2 = new DataTable();
+                da2.Fill(dt2);
+                dgTKTacGia.DataSource = dt2;
+
+                SqlDataAdapter da3 = new SqlDataAdapter(@"SELECT N.TenNXB AS [Nhà Xuất Bản],
+                    ISNULL(SUM(CT.Soluong),0) AS [Số Lượng Bán],
+                    ISNULL(SUM(CT.Soluong*CT.Giaban),0) AS [Doanh Thu]
+                    FROM NXB N LEFT JOIN Sach S ON N.MaNXB=S.MaNXB
+                    LEFT JOIN ChitietHD CT ON S.MaSach=CT.MaSach
+                    GROUP BY N.TenNXB ORDER BY [Doanh Thu] DESC", con);
+                DataTable dt3 = new DataTable();
+                da3.Fill(dt3);
+                dgTKNXB.DataSource = dt3;
+            }
+        }
+
+        private void btLamMoiTK_Click(object sender, EventArgs e)
+        {
+            LoadThongKe();
+        }
+    }
+}

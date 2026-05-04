@@ -1,0 +1,50 @@
+[
+  {
+    "MaDon": "DH20260322201839",
+    "NgayLap": "2026-03-22T20:17:51.8746257+07:00",
+    "TenKhach": "Nguyễn Thị Minh Anh",
+    "ChiTiet": [
+      {
+        "MaSP": "SP01",
+        "TenSP": "Trà xanh không độ",
+        "SoLuong": 5,
+        "DonGia": 10000.0,
+        "ThanhTien": 50000.0
+      }
+    ],
+    "TongTien": 50000.0,
+    "TrangThai": "Mới"
+  },
+  {
+    "MaDon": "DH20260322205033",
+    "NgayLap": "2026-03-22T20:49:57.5990963+07:00",
+    "TenKhach": "Nguyễn Văn A",
+    "ChiTiet": [
+      {
+        "MaSP": "SP02",
+        "TenSP": "caffe",
+        "SoLuong": 2,
+        "DonGia": 20000.0,
+        "ThanhTien": 40000.0
+      }
+    ],
+    "TongTien": 40000.0,
+    "TrangThai": "Mới"
+  },
+  {
+    "MaDon": "DH20260322205632",
+    "NgayLap": "2026-03-10T20:55:58",
+    "TenKhach": "Trần Thị B",
+    "ChiTiet": [
+      {
+        "MaSP": "SP01",
+        "TenSP": "Trà xanh không độ",
+        "SoLuong": 2,
+        "DonGia": 10000.0,
+        "ThanhTien": 20000.0
+      }
+    ],
+    "TongTien": 20000.0,
+    "TrangThai": "Mới"
+  }
+]

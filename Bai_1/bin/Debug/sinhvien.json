@@ -1,0 +1,20 @@
+[
+  {
+    "MaSV": "001",
+    "HoTen": "Nguyễn Thị Minh Anh",
+    "GioiTinh": "Nữ",
+    "NgaySinh": "2006-07-13T20:54:22",
+    "MaTinh": "30",
+    "MaKhoa": "IT",
+    "MaLop": "002"
+  },
+  {
+    "MaSV": "002",
+    "HoTen": "Ngô Vân Anh",
+    "GioiTinh": "Nữ",
+    "NgaySinh": "2006-08-30T20:54:22",
+    "MaTinh": "30",
+    "MaKhoa": "IT",
+    "MaLop": "002"
+  }
+]
