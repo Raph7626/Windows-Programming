@@ -1,0 +1,9 @@
+D:\OnThiWin\De8\bin\Debug\De8.exe
+D:\OnThiWin\De8\bin\Debug\De8.pdb
+D:\OnThiWin\De8\obj\Debug\De8.csproj.AssemblyReference.cache
+D:\OnThiWin\De8\obj\Debug\De8.Form1.resources
+D:\OnThiWin\De8\obj\Debug\De8.Properties.Resources.resources
+D:\OnThiWin\De8\obj\Debug\De8.csproj.GenerateResource.cache
+D:\OnThiWin\De8\obj\Debug\De8.csproj.CoreCompileInputs.cache
+D:\OnThiWin\De8\obj\Debug\De8.exe
+D:\OnThiWin\De8\obj\Debug\De8.pdb
